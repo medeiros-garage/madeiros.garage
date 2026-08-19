@@ -1,0 +1,362 @@
+/* =========================================================================
+   Medeiros Garage — landing de tela única (one-screen, sem scroll de página)
+   CSS puro, sem dependências. Ordem do arquivo:
+   1. Tokens  2. Reset  3. Layout  4. Header  5. Carrossel  6. Cards
+   7. Dots  8. Botão flutuante  9. Barra inferior  10. Noscript
+   11. Media queries (altura baixa, desktop, movimento reduzido)
+   ========================================================================= */
+
+/* ---------- 1. TOKENS ---------- */
+:root{
+  /* cores (extraídas do mockup) */
+  --bg:            #171717;             /* fundo da página */
+  --surface:       #333333;             /* header e cards */
+  --red:           #EB161C;             /* palavra em destaque */
+  --red-glow:      rgba(235,22,28,.55);
+  --wa-green:      #25D366;             /* botão flutuante */
+  --wa-bar:        #25CD64;             /* barra inferior fixa */
+  --text:          #FFFFFF;
+  --dot:           #333333;
+  --dot-active:    #4D4D4D;
+  --radius-card:   28px;
+
+  /* medidas do layout (ajuste aqui para mexer no espaçamento geral) */
+  --h-header:      85px;                /* altura do header */
+  --h-bar:         56px;                /* altura da barra inferior */
+  --h-dots:        86px;                /* faixa dos dots + botão flutuante */
+  --gap-side:      18px;                /* margem lateral do card */
+  --gap-top:       24px;                /* respiro entre header e card */
+  --fab:           56px;                /* diâmetro do botão flutuante */
+
+  /* animação */
+  --dur:           .38s;
+  --ease:          cubic-bezier(.22,.61,.36,1);
+
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* ---------- 2. RESET ---------- */
+*{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; }
+h1,h2,p,ul,figure,blockquote{ margin:0; padding:0; }
+ul{ list-style:none; }
+button{ font:inherit; color:inherit; }
+img{ max-width:100%; }
+
+/* ---------- 3. LAYOUT: 3 camadas fixas + 1 fluida ---------- */
+html{ background:var(--bg); }
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font);
+  height:100vh;            /* fallback */
+  height:100dvh;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;         /* a página nunca rola */
+  overscroll-behavior:none;
+  -webkit-tap-highlight-color:transparent;
+  -webkit-text-size-adjust:100%;
+}
+
+/* ---------- 4. HEADER ---------- */
+.header{
+  flex:0 0 auto;
+  height:calc(var(--h-header) + env(safe-area-inset-top));
+  padding-top:env(safe-area-inset-top);
+  background:var(--surface);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.logo{
+  height:72px;
+  width:auto;
+  display:block;
+}
+
+/* ---------- 5. CARROSSEL ---------- */
+.main{
+  flex:1 1 auto;
+  min-height:0;
+  position:relative;
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+}
+.carousel{
+  flex:1 1 auto;
+  min-height:0;
+  padding-top:var(--gap-top);
+}
+.viewport{
+  height:100%;
+  overflow:hidden;
+}
+.track{
+  display:flex;
+  height:100%;
+  touch-action:pan-y;      /* o gesto horizontal é nosso */
+  user-select:none;
+  -webkit-user-select:none;
+  transform:translate3d(0,0,0);
+}
+/* .is-animando é ligado/desligado pelo JS: sem transição durante o arraste */
+.track.is-animando{ transition:transform var(--dur) var(--ease); }
+.track.is-arrastando{ will-change:transform; }
+
+.slide{
+  flex:0 0 100%;
+  width:100%;
+  height:100%;
+  padding:0 var(--gap-side);
+}
+
+/* ---------- 6. CARDS ---------- */
+.card{
+  height:100%;
+  background:var(--surface);
+  border-radius:var(--radius-card);
+  padding:30px 24px;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  justify-content:safe center;  /* em tela baixa não corta o topo ao rolar */
+  overflow-y:auto;              /* rede de segurança: rola dentro do card */
+  overscroll-behavior:contain;
+  scrollbar-width:none;
+}
+.card::-webkit-scrollbar{ display:none; }
+
+h1,
+h2{
+  text-transform:uppercase;
+  font-weight:800;
+  line-height:1.08;
+  letter-spacing:-.005em;
+  text-wrap:balance;
+}
+h1{ font-size:clamp(2rem, 9vw, 2.6rem); }
+h2{ font-size:clamp(1.7rem, 7.6vw, 2.2rem); }
+
+.destaque{
+  color:var(--red);
+  text-shadow:0 0 18px var(--red-glow);
+}
+
+.lead{
+  margin-top:20px;
+  font-size:clamp(.95rem, 4.2vw, 1.05rem);
+  line-height:1.75;
+}
+
+/* listas dos cards 2 e 3 */
+.lista{
+  margin-top:24px;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  text-align:left;
+}
+.lista li{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  font-size:clamp(.95rem, 4.2vw, 1.05rem);
+  line-height:1.35;
+}
+.ic{
+  flex:0 0 24px;
+  width:24px;
+  height:24px;
+  color:var(--red);
+}
+.ic-check{ color:var(--wa-green); }
+
+/* depoimentos (card 4) */
+.depo{
+  margin-top:12px;
+  width:100%;
+  padding:12px 14px;
+  background:rgba(255,255,255,.06);
+  border-left:3px solid var(--red);
+  border-radius:6px 14px 14px 6px;
+  text-align:left;
+}
+.depo p{
+  font-size:clamp(.88rem, 3.8vw, .98rem);
+  line-height:1.45;
+}
+.depo cite{
+  display:block;
+  margin-top:6px;
+  font-style:normal;
+  font-size:.82rem;
+  opacity:.72;
+}
+
+/* CTA grande do card 4 */
+.cta{
+  margin-top:18px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  min-height:50px;
+  padding:13px 22px;
+  border-radius:999px;
+  background:var(--wa-green);
+  color:#fff;
+  text-decoration:none;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.01em;
+  font-size:clamp(.92rem, 4vw, 1.02rem);
+  box-shadow:0 0 18px rgba(37,211,102,.35);
+  transition:transform .15s var(--ease);
+}
+.cta:active{ transform:scale(.97); }
+.cta .ic-wa{ flex:0 0 22px; width:22px; height:22px; }
+
+/* ---------- 7. DOTS ---------- */
+.dots{
+  flex:0 0 var(--h-dots);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:13px;
+}
+.dot{
+  position:relative;
+  -webkit-appearance:none;
+  appearance:none;
+  border:0;
+  padding:0;
+  width:10px;
+  height:10px;
+  border-radius:5px;
+  background:var(--dot);
+  cursor:pointer;
+  transition:width .3s var(--ease), background-color .3s var(--ease);
+}
+/* área de toque de ~44px sem mudar o desenho */
+.dot::before{
+  content:"";
+  position:absolute;
+  inset:-17px -7px;
+}
+.dot[aria-current="true"]{
+  width:34px;
+  background:var(--dot-active);
+}
+.dot:focus-visible{ outline:2px solid var(--wa-green); outline-offset:4px; }
+
+/* ---------- 8. BOTÃO FLUTUANTE ---------- */
+.fab{
+  position:absolute;
+  right:27px;
+  bottom:calc((var(--h-dots) - var(--fab)) / 2);
+  width:var(--fab);
+  height:var(--fab);
+  border-radius:50%;
+  background:var(--wa-green);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  box-shadow:0 0 24px rgba(37,211,102,.55);
+  animation:pulso 2.8s ease-in-out infinite;
+}
+.fab .ic-wa{ width:30px; height:30px; }
+.fab:active{ transform:scale(.95); }
+.fab:focus-visible{ outline:3px solid #fff; outline-offset:3px; }
+
+@keyframes pulso{
+  0%,100%{ box-shadow:0 0 24px rgba(37,211,102,.55); }
+  50%    { box-shadow:0 0 34px rgba(37,211,102,.85); }
+}
+
+/* ---------- 9. BARRA INFERIOR ---------- */
+.rodape{ flex:0 0 auto; }
+.bar{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  height:calc(var(--h-bar) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  background:var(--wa-bar);
+  color:#fff;
+  text-decoration:none;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.01em;
+  font-size:clamp(1rem, 4.8vw, 1.2rem);
+}
+.bar .ic-wa{ flex:0 0 26px; width:26px; height:26px; }
+.bar:active{ background:#20b957; }
+.bar:focus-visible{ outline:3px solid #fff; outline-offset:-4px; }
+
+/* ---------- 10. SPRITE + NOSCRIPT ---------- */
+.sprite{ position:absolute; width:0; height:0; overflow:hidden; }
+
+/* Sem JS o carrossel não funciona: mostramos o conteúdo completo em texto. */
+.noscript{
+  position:fixed;
+  inset:0;
+  z-index:50;
+  background:var(--bg);
+  overflow-y:auto;
+  padding:24px 20px calc(80px + env(safe-area-inset-bottom));
+  line-height:1.6;
+}
+.noscript h2{ font-size:1.25rem; margin-top:20px; }
+.noscript p{ margin-top:8px; }
+.noscript a{ color:var(--wa-green); }
+
+/* ---------- 11. MEDIA QUERIES ---------- */
+
+/* telas baixas: reduz tipografia e respiros antes de recorrer à rolagem interna */
+@media (max-height:640px){
+  :root{ --h-dots:64px; --gap-top:16px; --h-header:74px; }
+  .logo{ height:62px; }
+  .card{ padding:22px 18px; }
+  h1{ font-size:clamp(1.6rem, 7.6vw, 2rem); }
+  h2{ font-size:clamp(1.4rem, 6.6vw, 1.75rem); }
+  .lead{ margin-top:14px; line-height:1.55; }
+  .lista{ margin-top:16px; gap:10px; }
+  .lista li{ line-height:1.25; }
+  .depo{ margin-top:12px; padding:10px 12px; }
+  .cta{ margin-top:16px; min-height:48px; padding:12px 18px; }
+}
+
+@media (max-height:540px){
+  :root{ --h-dots:54px; --fab:48px; --h-header:64px; }
+  .logo{ height:52px; }
+  .lista{ gap:8px; }
+  .ic{ flex-basis:20px; width:20px; height:20px; }
+}
+
+/* desktop: coluna central de no máximo 480px, como um app mobile */
+@media (min-width:600px){
+  body{
+    width:min(100%, 480px);
+    margin-inline:auto;
+    box-shadow:0 0 0 100vmax var(--bg);
+    clip-path:inset(0 -100vmax);
+  }
+  .fab:hover{ filter:brightness(1.06); }
+  .bar:hover{ background:#22c25e; }
+}
+
+/* movimento reduzido: sem pulso, transições curtas */
+@media (prefers-reduced-motion:reduce){
+  :root{ --dur:.15s; }
+  .fab{ animation:none; }
+  .dot{ transition-duration:.1s; }
+  .cta{ transition:none; }
+}
