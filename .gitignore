@@ -1,0 +1,21 @@
+# Materiais de origem e rascunhos — não fazem parte do site publicado
+DESIGN*.png
+DESIGN*.pdf
+LOGO*.png
+Dados.txt
+PROMPT-*.md
+ADENDO-*.md
+_teste-*.html
+
+# Screenshots e capturas
+screenshot*.png
+screenshot*.jpg
+*.screenshot.png
+
+# Ruído de sistema e de editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+node_modules/
