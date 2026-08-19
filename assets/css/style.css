@@ -92,6 +92,7 @@ body{
 .viewport{
   height:100%;
   overflow:hidden;
+  touch-action:pan-y;      /* o gesto horizontal é do carrossel; o vertical é do navegador */
 }
 .track{
   display:flex;
@@ -125,6 +126,9 @@ body{
   justify-content:center;
   justify-content:safe center;  /* em tela baixa não corta o topo ao rolar */
   overflow-y:auto;              /* rede de segurança: rola dentro do card */
+  touch-action:pan-y;           /* o card rola na vertical, mas NÃO rouba o swipe
+                                   horizontal do carrossel (sem isso o Chrome
+                                   dispara pointercancel no meio do gesto) */
   overscroll-behavior:contain;
   scrollbar-width:none;
 }
