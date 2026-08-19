@@ -20,9 +20,8 @@
   var CLIQUE_MIN     = 8;      // px de arraste que já cancelam o clique acidental
 
   // Autoplay (camada de tempo por cima do gesto; ver README)
-  var AUTOPLAY_MS      = 5500; // tempo em cada card (1→2→3→4); 0 desliga o autoplay
-  var AUTOPLAY_LOOP_MS = 6000; // tempo no último card antes de voltar ao primeiro
-  var REWIND_MS        = 550;  // duração da volta do card 4 ao card 1
+  var AUTOPLAY_MS = 7000;      // tempo em CADA card, inclusive o último; 0 desliga o autoplay
+  var REWIND_MS   = 550;       // duração da volta do card 4 ao card 1
 
   // Google Ads: troque pelo par "AW-XXXXXXXXX/RÓTULO" da sua ação de conversão.
   var CONVERSAO_ADS  = 'AW-XXXXXXXXX/XXXXXXXX';
@@ -159,9 +158,7 @@
     if (!this.autoplayLigado || document.hidden || this.arrastando) { return; }
 
     var self = this;
-    var noUltimo = (this.indice === this.slides.length - 1);
-    this.timerAuto = setTimeout(function () { self.avancarAuto(); },
-                                noUltimo ? AUTOPLAY_LOOP_MS : AUTOPLAY_MS);
+    this.timerAuto = setTimeout(function () { self.avancarAuto(); }, AUTOPLAY_MS);
   };
 
   /** Avanço do relógio: 1→2→3→4 e, só aqui, a volta 4→1. */
@@ -211,7 +208,7 @@
     var novo = Math.max(0, Math.min(this.slides.length - 1, i));
     this.indice = novo;
 
-    // leitor de tela não deve narrar sozinho a cada 5,5s; anuncia só o que o usuário pediu
+    // leitor de tela não deve narrar sozinho a cada 7s; anuncia só o que o usuário pediu
     this.raiz.setAttribute('aria-live', automatico ? 'off' : 'polite');
 
     this.track.classList.add('is-arrastando'); // will-change durante o movimento
