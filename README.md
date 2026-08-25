@@ -29,7 +29,7 @@ README.md             este arquivo
 O número fica em **um lugar só**: o atributo `data-whatsapp` do `<body>`, em `index.html`.
 
 ```html
-<body data-whatsapp="5511972731398" data-msg="Olá! Preciso de socorro mecânico 24h.">
+<body data-whatsapp="5511997699947" data-msg="Olá! Preciso de socorro mecânico 24h.">
 ```
 
 - `data-whatsapp` — número com código do país e DDD, **só dígitos** (55 + 11 + número).
@@ -39,7 +39,7 @@ O `main.js` reescreve automaticamente os três botões (flutuante, barra inferio
 a partir desses dois atributos.
 
 Depois de trocar, atualize também estes três pontos, que existem para funcionar **sem JavaScript**
-e para o Google entender o telefone (busque por `972731398` no `index.html`):
+e para o Google entender o telefone (busque por `997699947` no `index.html`):
 
 1. o `href` de cada um dos três links (`data-wa="flutuante"`, `"barra"`, `"card4"`);
 2. o campo `"telephone"` dentro do bloco `<script type="application/ld+json">`;
