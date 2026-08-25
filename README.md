@@ -132,7 +132,7 @@ na URL como `utm_content`, então dá para comparar no relatório qual ponto con
 
 ## 5. Antes de publicar — checklist
 
-- [ ] Trocar `SEUDOMINIO.com.br` pelo domínio real em: `index.html` (canonical, Open Graph,
+- [ ] Trocar `https://medeirosgarage.vercel.app/` pelo domínio real em: `index.html` (canonical, Open Graph,
       Twitter, JSON-LD), `robots.txt` e `sitemap.xml`.
 - [ ] Preencher `address` e `geo` no JSON-LD (há um bloco comentado pronto, logo abaixo do script)
       e listar Instagram / perfil do Google em `sameAs`.
