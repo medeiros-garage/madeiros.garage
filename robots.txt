@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Troque SEUDOMINIO.com.br pelo dominio real antes de publicar
-Sitemap: https://SEUDOMINIO.com.br/sitemap.xml
+Sitemap: https://medeirosgarage.vercel.app/sitemap.xml
